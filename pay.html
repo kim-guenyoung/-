@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온라인 결제</title>
+    <link rel="stylesheet" href="pay.css">
+    <link rel="stylesheet" href="css/animate.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/fullpage.css" />
+    <link rel="stylesheet" href="css/swiper.css" />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link rel="stylesheet" href="css/nav.css" />
+    <style>
+        .footer2{
+            margin-top: 470px;
+        }
+    </style>
+    </head>
+    <body>
+        <form id="payment-form">
+            <h2>온라인 결제</h2>
+    
+            <div class="form-group">
+                <label for="months">개월 수 선택:</label>
+                <select id="months" onchange="calculatePrice()" required>
+                    <option value="" disabled selected hidden>개월 수 선택</option>
+                        <option value="1">1개월</option>
+                        <option value="2">2개월</option>
+                        <option value="3">3개월</option>
+                        <option value="4">4개월</option>
+                        <option value="5">5개월</option>
+                        <option value="6">6개월</option>
+                        <option value="7">7개월</option>
+                        <option value="8">8개월</option>
+                        <option value="9">9개월</option>
+                        <option value="10">10개월</option>
+                        <option value="11">11개월</option>
+                        <option value="12">12개월</option>
+                    </select>
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                <label>결제 방법:</label>
+                <input type="radio" name="payment-method" id="cash" value="cash" required> <label for="cash">현금</label>
+                <input type="radio" name="payment-method" id="card" value="card" required> <label for="card">카드</label>
+                <input type="checkbox" name="payment-method" id="coupon" value="coupon" onchange="toggleCouponCode()">
+                <label for="coupon">쿠폰</label>
+            </div>
+    
+            <div id="coupon-code" style="display: none;">
+                <label for="coupon-input">쿠폰 코드 입력:</label>
+                <input type="text" id="coupon-input">
+                <button type="button" onclick="applyCoupon()">확인</button>
+            </div>
+    
+            <div class="form-group">
+                <label for="total-price">총 가격:</label>
+                <span id="total-price">0원</span>
+            </div>
+    
+            <button type="button" onclick="processPayment()">결제</button>
+        </form>
+
+        <script>
+            function calculatePrice() {
+                var monthsSelect = document.getElementById("months");
+                var totalPriceElement = document.getElementById("total-price");
+                var selectedMonths = parseInt(monthsSelect.value);
+                var discount = selectedMonths >= 3 ? 1000 * Math.floor(selectedMonths / 3) : 0;
+
+                var pricePerMonth = 10000;
+                var totalPrice = selectedMonths * pricePerMonth - discount;
+
+                // 쿠폰 코드 적용
+                var couponCodeInput = document.getElementById("coupon-input");
+                var couponDiscount = 0;
+
+                // 쿠폰 코드 일치 여부 확인
+                if (document.getElementById("coupon").checked && couponCodeInput.value === "coupon") {
+                    couponDiscount = totalPrice * 0.2; // 20% 할인
+                }
+
+                totalPrice -= couponDiscount;
+
+                totalPriceElement.textContent = totalPrice + "원";
+            }
+
+            function toggleCouponCode() {
+                var couponCodeDiv = document.getElementById("coupon-code");
+                couponCodeDiv.style.display = document.getElementById("coupon").checked ? "block" : "none";
+                calculatePrice(); // 쿠폰 체크 여부 변경 시 가격을 다시 계산
+            }
+
+            function applyCoupon() {
+                calculatePrice(); // 쿠폰 코드 확인 버튼을 눌렀을 때 가격을 다시 계산
+            }
+
+            function processPayment() {
+                // 유효성 검사 및 결제 로직을 여기에 추가
+                var totalPrice = parseFloat(document.getElementById("total-price").textContent);
+                var cashRadio = document.getElementById("cash");
+                var cardRadio = document.getElementById("card");
+            
+                if (!cashRadio.checked && !cardRadio.checked) {
+                    alert('결제 방법을 선택해주세요');
+                    return;
+                }
+                if (totalPrice === 0) {
+                    alert('선택된 결제내역이 없습니다. 다시 확인해주세요.');
+                } else {
+                    alert(totalPrice + '원 결제가 완료되었습니다!');
+                }
+            }
+        </script>
+    </body>
+    <div class="footer2" style="background-color: #494949; height: 200px">
+        <p class="top">
+            개인정보처리방침 | 영상정보처리기기 운영관리방침 |
+            이메일주소무단수집거부 | 홈페이지콘텐츠담당자 : 스포융합학부(전화
+            : 041-550-5334) / 메일 : convergenceofsports@smu.ac.kr
+        </p>
+        <p>
+            (우 31066) 충남 천안시 동남구 상명대길 31 상명대학교
+            스포츠융합학부 (스포츠센터 K102호) TEL. 041-550-5334 FAX.
+            041-550-5339
+        </p>
+        <p>COPYRIGHT BY SANGMYUNG UNIVERSITY. ALL RIGHTS RESERVED.</p>
+    </div>
+</html>
